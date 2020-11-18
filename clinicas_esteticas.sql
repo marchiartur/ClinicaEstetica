@@ -17,13 +17,13 @@ drop table if exists clinicas_esteticas;
 create table if not exists clinicas_esteticas (
 	id int primary key,
 	nome varchar(255) not null,
-    telefone varchar(13) not null
+    telefone varchar(20) not null
 );
 
 create table if not exists pessoas (
 	id int primary key,
     nome varchar(255) not null,
-    telefone varchar(13) not null,
+    telefone varchar(20) not null,
     id_clinica_estetica int not null,
     foreign key(id_clinica_estetica) references clinicas_esteticas(id) on delete cascade
 );
@@ -60,8 +60,8 @@ create table if not exists agendas(
 
 create table if not exists horarios(
 	id int primary key,
-    data_inicio date not null,
-    data_fim date not null,
+    data_inicio datetime not null,
+    data_fim datetime not null,
     id_cliente int not null,
     id_agenda int not null,
     foreign key(id_cliente) references clientes(id) on delete cascade,
@@ -77,14 +77,16 @@ create table if not exists estoques(
 create table if not exists produtos(
 	id int primary key,
     nome varchar(255) not null,
+    preco_de_custo float not null,
+    preco_de_venda float not null,
     id_estoque int,
     foreign key (id_estoque) references estoques(id)
 );
 
 create table if not exists fornecedores(
-    cnpj varchar(14) primary key,
+    cnpj varchar(18) primary key,
     nome_fantasia varchar(255) not null,
-    telefone varchar(13) not null
+    telefone varchar(20) not null
 );
 
 create table if not exists lotes(
@@ -97,7 +99,7 @@ create table if not exists pedidos_compras(
 	id int primary key,
     data_pedido date not null,
     preco_final float not null,
-    cnpj_fornecedor varchar(14),
+    cnpj_fornecedor varchar(18),
     id_lote int,
     foreign key (cnpj_fornecedor) references fornecedores(cnpj),
     foreign key (id_lote) references lotes(id)
@@ -109,7 +111,9 @@ create table if not exists pedidos_vendas(
     preco_final float not null,
     desconto float not null,
 	id_cliente int,
+    id_funcionario int,
     id_lote int,
     foreign key (id_cliente) references clientes(id),
+    foreign key (id_funcionario) references funcionarios(id),
     foreign key (id_lote) references lotes(id)
 );
