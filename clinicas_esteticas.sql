@@ -1,8 +1,9 @@
 use clinica_estetica;
 
+drop table if exists lotes_compra;
+drop table if exists lotes_venda;
 drop table if exists pedidos_vendas;
 drop table if exists pedidos_compras;
-drop table if exists lotes;
 drop table if exists produtos;
 drop table if exists estoques;
 drop table if exists fornecedores;
@@ -79,6 +80,7 @@ create table if not exists produtos(
     nome varchar(255) not null,
     preco_de_custo float not null,
     preco_de_venda float not null,
+    quantidade int not null,
     id_estoque int,
     foreign key (id_estoque) references estoques(id)
 );
@@ -89,20 +91,12 @@ create table if not exists fornecedores(
     telefone varchar(20) not null
 );
 
-create table if not exists lotes(
-	id int primary key,
-    id_produto int,
-    foreign key(id_produto) references produtos(id)
-);
-
 create table if not exists pedidos_compras(
 	id int primary key,
     data_pedido date not null,
     preco_final float not null,
     cnpj_fornecedor varchar(18),
-    id_lote int,
-    foreign key (cnpj_fornecedor) references fornecedores(cnpj),
-    foreign key (id_lote) references lotes(id)
+    foreign key (cnpj_fornecedor) references fornecedores(cnpj)
 );
 
 create table if not exists pedidos_vendas(
@@ -112,8 +106,28 @@ create table if not exists pedidos_vendas(
     desconto float not null,
 	id_cliente int,
     id_funcionario int,
-    id_lote int,
     foreign key (id_cliente) references clientes(id),
-    foreign key (id_funcionario) references funcionarios(id),
-    foreign key (id_lote) references lotes(id)
+    foreign key (id_funcionario) references funcionarios(id)
 );
+
+create table if not exists lotes_venda(
+	id int primary key,
+    quantidade int not null,
+    id_produto int,
+    id_pedido_venda int,
+    foreign key(id_produto) references produtos(id),
+    foreign key(id_pedido_venda) references pedidos_vendas(id)
+);
+
+create table if not exists lotes_compra(
+	id int primary key,
+    quantidade int not null,
+    id_produto int,
+    id_pedido_compra int,
+    foreign key(id_produto) references produtos(id),
+    foreign key(id_pedido_compra) references pedidos_compras(id)
+);
+
+
+select * from pedidos_compras;
+
