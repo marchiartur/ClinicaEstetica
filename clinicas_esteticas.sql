@@ -96,7 +96,9 @@ create table if not exists pedidos_compras(
     data_pedido date not null,
     preco_final float not null,
     cnpj_fornecedor varchar(18),
-    foreign key (cnpj_fornecedor) references fornecedores(cnpj)
+    id_clinica int,
+    foreign key (cnpj_fornecedor) references fornecedores(cnpj),
+	foreign key (id_clinica) references clinicas_esteticas(id)
 );
 
 create table if not exists pedidos_vendas(
